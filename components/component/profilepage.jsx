@@ -285,7 +285,7 @@ export function ProfilePage() {
           <CardContent>
             <div className="grid grid-cols-2 gap-2">
             {
-              user?.skills.map((skill) =><>
+              user?.skills?.map((skill) =><>
               <Badge>{skill}</Badge>
               </>)
             }
@@ -307,12 +307,17 @@ export function ProfilePage() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-2">
-              <Badge>Web Development</Badge>
+            {
+              user?.interests?.map((interest) =><>
+              <Badge>{interest}</Badge>
+              </>)
+            }
+              {/* <Badge>Web Development</Badge>
               <Badge>Mobile Development</Badge>
               <Badge>Open Source</Badge>
               <Badge>Artificial Intelligence</Badge>
               <Badge>Blockchain</Badge>
-              <Badge>Sustainability</Badge>
+              <Badge>Sustainability</Badge> */}
             </div>
           </CardContent>
         </Card>
