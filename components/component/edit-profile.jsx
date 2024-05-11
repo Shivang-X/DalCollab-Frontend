@@ -1,5 +1,6 @@
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
+import { useDispatch, useSelector } from "react-redux"
 import { DropdownMenuTrigger, DropdownMenuItem, DropdownMenuContent, DropdownMenu } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
 import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card"
@@ -7,9 +8,53 @@ import Link from "next/link"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { useState, useEffect } from "react"
+import { loadUser, updateProfile } from "@/actions/userActions"
 
 export function EditProfile({ openModal }) {
 
+  const dispatch = useDispatch();
+
+  const [userName, setUsername] = useState();
+  const [mobileNumber, setMobileNumber] = useState(0);
+  const [tagline, setTagline] = useState(0);
+  const [bio, setBio] = useState(0);
+
+  const { isAuthenticated, user, error } = useSelector(state => state.auth)
+  const { isUpdated } = useSelector((state) => state.user);
+
+  console.log(tagline)
+
+  useEffect(() => {
+    if(user){
+      setUsername(user.userName);
+      setMobileNumber(user.mobileNumber)
+      setTagline(user.tagline)
+      setBio(user.bio)
+      
+      if (isUpdated) {
+        // toast('User updated successfully');
+        dispatch(loadUser());
+
+      
+      dispatch({
+        type: "UPDATE_PROFILE_RESET",
+      });
+      openModal(false);
+      }
+    }
+  }, [dispatch, user, isUpdated])
+
+  const submitHandler = async (e) => {
+    console.log({userName, mobileNumber, tagline, bio})
+    e.preventDefault();
+    // removeErrorLayout();
+    // if(isValidationPassed()){
+      const user = {userName, mobileNumber, tagline, bio};
+      console.log(user);
+      dispatch(updateProfile(user))
+    // }
+  }
   
   return (<>
     <div
@@ -24,33 +69,34 @@ export function EditProfile({ openModal }) {
           </Button>
         </div>
         <form className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          {/* <div className="grid grid-cols-2 gap-4"> */}
             <div>
               <Label htmlFor="name">Name</Label>
-              <Input defaultValue="John Doe" id="name" />
+              <Input defaultValue="John Doe" id="username" value={userName} onChange={(e) => setUsername(e.target.value)}/>
             </div>
-            <div>
-              <Label htmlFor="username">Username</Label>
-              <Input defaultValue="johndoe" id="username" />
-            </div>
-          </div>
-          <div>
+          {/* </div> */}
+          {/* <div>
             <Label htmlFor="email">Email</Label>
-            <Input defaultValue="john@example.com" id="email" type="email" />
-          </div>
+            <Input defaultValue="john@example.com" id="email" type="email" disable/>
+          </div> */}
+          <div>
+              <Label htmlFor="name">Tag Line</Label>
+              <Input defaultValue="John Doe" id="username" value={tagline} onChange={(e) => setTagline(e.target.value)}/>
+            </div>
           <div>
             <Label htmlFor="mobile">Mobile</Label>
-            <Input defaultValue="+1 (555) 555-5555" id="mobile" type="tel" />
+            <Input id="mobile" type="number" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)}/>
           </div>
           <div>
             <Label htmlFor="bio">Bio</Label>
             <Textarea
-              defaultValue="I'm a passionate software engineer with a strong background in full-stack web development. I love building innovative and user-friendly applications that solve real-world problems."
               id="bio"
-              rows={3} />
+              rows={3} 
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}/>
           </div>
           <div className="flex justify-end">
-            <Button type="submit">Save Changes</Button>
+            <Button type="submit" onClick={submitHandler}>Save Changes</Button>
           </div>
         </form>
       </div>

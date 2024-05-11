@@ -57,9 +57,7 @@ export const updateProfile = (user) => async(dispatch) => {
       type: "UPDATE_PROFILE_REQUEST",
     });
 
-    console.log(user)
-
-    const { data } = await request.post(`user/profile/update`, user);
+    const { data } = await request.put(`/profile/update`, user);
     
     dispatch({
       type: "UPDATE_PROFILE_SUCCESS",
@@ -82,7 +80,7 @@ export const loadUser = () => async (dispatch) => {
       type: "LOAD_USER_REQUEST"
     })
 
-    const {data} = await request.get(`/me`);
+    const {data} = await request.get(`/profile/me`);
     console.log(data);
 
     dispatch({

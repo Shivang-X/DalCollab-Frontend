@@ -284,14 +284,19 @@ export function ProfilePage() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-2">
-              <Badge>JavaScript</Badge>
+            {
+              user?.skills.map((skill) =><>
+              <Badge>{skill}</Badge>
+              </>)
+            }
+              {/* <Badge>JavaScript</Badge>
               <Badge>React</Badge>
               <Badge>Node.js</Badge>
               <Badge>TypeScript</Badge>
               <Badge>Git</Badge>
               <Badge>CSS</Badge>
               <Badge>SQL</Badge>
-              <Badge>AWS</Badge>
+              <Badge>AWS</Badge> */}
             </div>
           </CardContent>
         </Card>

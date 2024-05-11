@@ -13,7 +13,7 @@ const thunk = require('redux-thunk').thunk;
 const reducer = combineReducers({
     auth: authReducer,
     // getads: getAdsReducer,
-    // user: userReducer,
+    user: userReducer,
     // postad: adReducer,
     // updateads: updateAdsReducer
 })
