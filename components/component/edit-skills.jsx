@@ -14,7 +14,6 @@ import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import { loadUser, updateSkills } from "@/actions/userActions";
 
 export function EditSkills({ openModal }) {
-
   const dispatch = useDispatch();
 
   const { isAuthenticated, user, error } = useSelector((state) => state.auth);
@@ -71,27 +70,33 @@ export function EditSkills({ openModal }) {
     "Robotics",
   ];
 
-
   useEffect(() => {
     if (user) {
       setSkills([...user.skills]);
     }
 
-    if(isUpdated){
+    if (isUpdated) {
       // alert("Here")
       dispatch(loadUser());
       dispatch({
         type: "UPDATE_PROFILE_RESET",
       });
-      openModal(false)
+      openModal(false);
     }
   }, [dispatch, user, isUpdated]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    dispatch(updateSkills(skills))
-  }
+    dispatch(updateSkills(skills));
+  };
 
+  const handleDeleteSkill = (index) => {
+    const newSkills = [...skills];
+
+    newSkills.splice(index, 1);
+
+    setSkills(newSkills);
+  };
 
   return (
     <div
@@ -114,11 +119,15 @@ export function EditSkills({ openModal }) {
         <form className="space-y-4">
           <div>
             <Label htmlFor="role">Skills</Label>
-            <Select onValueChange={(value) => {setSkills([...skills, value])}}>
+            <Select
+              onValueChange={(value) => {
+                setSkills([...skills, value]);
+              }}
+            >
               <SelectTrigger id="role">
                 <SelectValue placeholder="Type here" />
               </SelectTrigger>
-              <SelectContent onChange={() => alert('f')}>
+              <SelectContent onChange={() => alert("f")}>
                 <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center"></span>
                 {allskills.map((skill) => (
                   <SelectItem value={skill}>
@@ -135,16 +144,25 @@ export function EditSkills({ openModal }) {
               </SelectContent>
             </Select>
           </div>
-          {skills?.map((skill) => (
+          {skills?.map((skill, index) => (
             <>
               <Badge className="mr-3">
-                {skill} <XIcon className="ml-1.5 w-4 h-4" />
+                {skill}{" "}
+                <XIcon
+                  sstyle={{ color: "red", cursor: "default" }}
+                  onMouseEnter={(e) => (e.target.style.color = "red")} // Hover effect
+                  onMouseLeave={(e) => (e.target.style.color = "white")}
+                  onClick={() => handleDeleteSkill(index)}
+                  className="ml-1.5 w-4 h-4"
+                />
               </Badge>
             </>
           ))}
           <div className="grid grid-cols-2 gap-4" />
           <div className="flex justify-end">
-            <Button type="submit" onClick={submitHandler}>Save Changes</Button>
+            <Button type="submit" onClick={submitHandler}>
+              Save Changes
+            </Button>
           </div>
         </form>
       </div>
