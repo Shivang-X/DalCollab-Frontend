@@ -59,7 +59,8 @@ const SelectContent = React.forwardRef(({ className, children, position = "poppe
           "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
         className
       )}
-      position={position}
+      // position={position}  
+      placement="bottom"
       {...props}>
       <SelectScrollUpButton />
       <SelectPrimitive.Viewport
@@ -90,11 +91,10 @@ const SelectItem = React.forwardRef(({ className, children, ...props }, ref) => 
     )}
     {...props}>
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-      <SelectPrimitive.ItemIndicator>
+      {/* <SelectPrimitive.ItemIndicator>
         <Check className="h-4 w-4" />
-      </SelectPrimitive.ItemIndicator>
+      </SelectPrimitive.ItemIndicator> */}
     </span>
-
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
   </SelectPrimitive.Item>
 ))

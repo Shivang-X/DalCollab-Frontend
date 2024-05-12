@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { useState, useEffect } from "react"
 import { loadUser, updateProfile } from "@/actions/userActions"
 
+
 export function EditProfile({ openModal }) {
 
   const dispatch = useDispatch();
@@ -35,8 +36,6 @@ export function EditProfile({ openModal }) {
       if (isUpdated) {
         // toast('User updated successfully');
         dispatch(loadUser());
-
-      
       dispatch({
         type: "UPDATE_PROFILE_RESET",
       });

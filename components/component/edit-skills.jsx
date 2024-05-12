@@ -1,18 +1,112 @@
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
-import { SelectValue, SelectTrigger, SelectItem, SelectContent, Select } from "@/components/ui/select"
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import {
+  SelectValue,
+  SelectTrigger,
+  SelectItem,
+  SelectContent,
+  Select,
+} from "@/components/ui/select";
+import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import { Check, ChevronDown, ChevronUp } from "lucide-react";
+import { loadUser, updateSkills } from "@/actions/userActions";
 
 export function EditSkills({ openModal }) {
+
+  const dispatch = useDispatch();
+
+  const { isAuthenticated, user, error } = useSelector((state) => state.auth);
+  const { isUpdated } = useSelector((state) => state.user);
+
+  const [skills, setSkills] = useState([]);
+
+  const allskills = [
+    "Python",
+    "Java",
+    "C++",
+    "JavaScript",
+    "C#",
+    "PHP",
+    "Ruby",
+    "Go",
+    "Swift",
+    "Kotlin",
+    "HTML",
+    "CSS",
+    "R",
+    "Julia",
+    "Java (Android)",
+    "Swift/Kotlin (iOS)",
+    "React Native (cross-platform)",
+    "Python (TensorFlow, PyTorch)",
+    "C# (Unity)",
+    "C++ (Unreal Engine)",
+    "JavaScript",
+    "Bash (Linux/macOS)",
+    "PowerShell (Windows)",
+    "Software development methodologies (Agile, Waterfall)",
+    "Version control systems (Git, SVN)",
+    "Operating systems (Windows, Linux, macOS)",
+    "Cloud computing (AWS, Azure, GCP)",
+    "Databases (SQL: MySQL, PostgreSQL, Oracle; NoSQL: MongoDB, Cassandra)",
+    "Networking (TCP/IP, OSI model)",
+    "Computer architecture",
+    "Algorithms and data structures",
+    "Security principles",
+    "Design patterns",
+    "Web development frameworks (React, Angular, Vue.js)",
+    "DevOps (CI/CD pipelines)",
+    "Testing (unit testing, integration testing)",
+    "Debugging skills",
+    "Human-computer interaction (HCI)",
+    "User interface (UI) and user experience (UX) design",
+    "Artificial intelligence (AI)",
+    "Machine learning (ML)",
+    "Big data processing",
+    "Cybersecurity",
+    "Blockchain technology",
+    "Internet of Things (IoT)",
+    "Robotics",
+  ];
+
+
+  useEffect(() => {
+    if (user) {
+      setSkills([...user.skills]);
+    }
+
+    if(isUpdated){
+      // alert("Here")
+      dispatch(loadUser());
+      dispatch({
+        type: "UPDATE_PROFILE_RESET",
+      });
+      openModal(false)
+    }
+  }, [dispatch, user, isUpdated]);
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    dispatch(updateSkills(skills))
+  }
+
+
   return (
-    (<div
+    <div
       key="1"
-      className="fixed inset-0 bg-gray-900/50 z-50 flex items-center justify-center">
-      <div
-        className="bg-white dark:bg-gray-900 rounded-lg shadow-lg w-full max-w-md p-6 space-y-6">
+      className="fixed inset-0 bg-gray-900/50 z-50 flex items-center justify-center"
+    >
+      <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg w-full max-w-md p-6 space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold">Edit Profile</h2>
-          <Button className="ml-auto" size="icon" variant="ghost" onClick={() => openModal(false)}>
+          <Button
+            className="ml-auto"
+            size="icon"
+            variant="ghost"
+            onClick={() => openModal(false)}
+          >
             <XIcon className="w-5 h-5" />
             <span className="sr-only">Close</span>
           </Button>
@@ -20,35 +114,47 @@ export function EditSkills({ openModal }) {
         <form className="space-y-4">
           <div>
             <Label htmlFor="role">Skills</Label>
-            <Select>
+            <Select onValueChange={(value) => {setSkills([...skills, value])}}>
               <SelectTrigger id="role">
                 <SelectValue placeholder="Type here" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="developer">Developer</SelectItem>
-                <SelectItem value="designer">Designer</SelectItem>
-                <SelectItem value="manager">Manager</SelectItem>
+              <SelectContent onChange={() => alert('f')}>
+                <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center"></span>
+                {allskills.map((skill) => (
+                  <SelectItem value={skill}>
+                    {skills.includes(skill) ? (
+                      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+                        <Check className="h-4 w-4" />
+                      </span>
+                    ) : (
+                      <></>
+                    )}
+                    {skill}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
-          <Badge className="mr-3">JavaScript <XIcon className="ml-1.5 w-4 h-4" /></Badge>
-              <Badge className="mr-1.5">React <XIcon className="ml-1.5 w-4 h-4" /></Badge>
-              <Badge className="mr-1.5">Node.js <XIcon className="ml-1.5 w-4 h-4" /></Badge>
-              <Badge className="mr-1.5">TypeScript <XIcon className="ml-1.5 w-4 h-4" /></Badge>
-              <Badge className="mr-1.5">Git <XIcon className="ml-1.5 w-4 h-4" /></Badge>
-              <Badge className="mr-1.5">CSS <XIcon className="ml-1.5 w-4 h-4" /></Badge>
-              <Badge className="mr-1.5">SQL <XIcon className="ml-1.5 w-4 h-4" /></Badge>
-              <Badge className="mr-1.5">AWS <XIcon className="ml-1.5 w-4 h-4" /></Badge>
+          {skills?.map((skill) => (
+            <>
+              <Badge className="mr-3">
+                {skill} <XIcon className="ml-1.5 w-4 h-4" />
+              </Badge>
+            </>
+          ))}
           <div className="grid grid-cols-2 gap-4" />
+          <div className="flex justify-end">
+            <Button type="submit" onClick={submitHandler}>Save Changes</Button>
+          </div>
         </form>
       </div>
-    </div>)
+    </div>
   );
 }
 
 function XIcon(props) {
   return (
-    (<svg
+    <svg
       {...props}
       xmlns="http://www.w3.org/2000/svg"
       width="24"
@@ -58,9 +164,10 @@ function XIcon(props) {
       stroke="currentColor"
       strokeWidth="2"
       strokeLinecap="round"
-      strokeLinejoin="round">
+      strokeLinejoin="round"
+    >
       <path d="M18 6 6 18" />
       <path d="m6 6 12 12" />
-    </svg>)
+    </svg>
   );
 }
