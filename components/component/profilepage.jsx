@@ -22,6 +22,7 @@ export function ProfilePage() {
   const [editSkills, setEditSkills] = useState(false);
   const [editIntrests, setEditIntrests] = useState(false);
   const [editProject, setEditProject] = useState(false);
+  const [projectId, setProjectId] = useState(0);
 
   const { isAuthenticated, user, error } = useSelector((state) => state.auth);
 
@@ -30,7 +31,7 @@ export function ProfilePage() {
       {editModal ? <EditProfile openModal={setEditModal} /> : <></>}
       {editSkills ? <EditSkills openModal={setEditSkills} /> : <></>}
       {editIntrests ? <EditIntrests openModal={setEditIntrests} /> : <></>}
-      {editProject ? <EditProject openModal={setEditProject} /> : <></>}
+      {editProject ? <EditProject openModal={setEditProject} projectId={projectId} /> : <></>}
       <div>
         <div className="flex items-center gap-4">
           <Avatar className="h-16 w-16">
@@ -51,7 +52,7 @@ export function ProfilePage() {
         <div className="grid gap-4 mt-8">
           {user?.projects?.length > 0 ? (
             <>
-              {user?.projects.map((project) => (
+              {user?.projects.map((project, i) => (
                 <div className="rounded-lg overflow-hidden">
                 <div className="p-4 bg-gray-100 dark:bg-gray-800">
                   <div className="flex items-center justify-between">
@@ -70,7 +71,7 @@ export function ProfilePage() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem>View Project</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setEditProject(true)}>
+                        <DropdownMenuItem onClick={() => {setEditProject(true); setProjectId(i)}}>
                           Edit Project
                         </DropdownMenuItem>
                         <DropdownMenuItem>Delete Project</DropdownMenuItem>

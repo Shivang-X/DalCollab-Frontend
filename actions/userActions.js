@@ -119,6 +119,29 @@ export const updateSkills = (skills) =>  async(dispatch) => {
   }
 }
 
+export const updateProject = (project) =>  async(dispatch) => {
+  try {
+    dispatch({
+      type: "UPDATE_PROFILE_REQUEST",
+    });
+
+    console.log(project)
+    const { data } = await request.put(`/profile/updateproject`, project);
+    
+    dispatch({
+      type: "UPDATE_PROFILE_SUCCESS",
+      payload: true,
+    });
+
+  } catch (error) {
+    console.log(error)
+    dispatch({
+      type: "UPDATE_PROFILE_FAIL",
+      payload: error.response.data.error,
+    });
+  }
+}
+
 //Load user
 export const loadUser = () => async (dispatch) => {
   try{

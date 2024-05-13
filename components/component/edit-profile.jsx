@@ -24,8 +24,6 @@ export function EditProfile({ openModal }) {
   const { isAuthenticated, user, error } = useSelector(state => state.auth)
   const { isUpdated } = useSelector((state) => state.user);
 
-  console.log(tagline)
-
   useEffect(() => {
     if(user){
       setUsername(user.userName);
