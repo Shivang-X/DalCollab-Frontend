@@ -73,6 +73,29 @@ export const updateProfile = (user) => async(dispatch) => {
   }
 }
 
+export const updateInterests = (interests) =>  async(dispatch) => {
+  try {
+    dispatch({
+      type: "UPDATE_PROFILE_REQUEST",
+    });
+
+    console.log(interests)
+    const { data } = await request.put(`/profile/addinterests`, interests);
+    
+    dispatch({
+      type: "UPDATE_PROFILE_SUCCESS",
+      payload: true,
+    });
+
+  } catch (error) {
+    console.log(error)
+    dispatch({
+      type: "UPDATE_PROFILE_FAIL",
+      payload: error.response.data.error,
+    });
+  }
+}
+
 export const updateSkills = (skills) =>  async(dispatch) => {
   try {
     dispatch({

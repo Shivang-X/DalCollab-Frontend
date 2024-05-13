@@ -25,8 +25,6 @@ export function ProfilePage() {
 
   const { isAuthenticated, user, error } = useSelector((state) => state.auth);
 
-  console.log(user);
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-[1fr_300px] gap-8 max-w-6xl mx-auto py-10 px-4 md:px-6">
       {editModal ? <EditProfile openModal={setEditModal} /> : <></>}
