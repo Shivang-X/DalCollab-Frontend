@@ -29,6 +29,16 @@ export function HomePage() {
     project.tags.some((tag) => selectedTag.includes(tag))
   );
 
+  const alterSelectedTags = (tag) => {
+    if(selectedTag.includes(tag)){
+      
+      const updatedTags = [...selectedTag];
+      updatedTags.splice(selectedTag.indexOf(tag), 1)
+      setSelectedTag([...updatedTags])
+    }else{
+      setSelectedTag([...selectedTag, tag]);
+    }
+  }
 
 
   return (
@@ -131,12 +141,12 @@ export function HomePage() {
                 <h4 className="text-sm font-medium mb-2">Tags</h4>
                 <div className="space-y-2">
                   {allskills.map(tag => <div className="flex items-center gap-2">
-                    <Checkbox id="tag-javascript" onClick={() => setSelectedTag([...selectedTag, tag])}/>
+                    <Checkbox id="tag-javascript" onClick={() => alterSelectedTags(tag)}/>
                     <Label className="text-sm font-normal" htmlFor="tag-javascript">
                       {tag}
                     </Label>
                   </div>)}
-                  <div className="flex items-center gap-2">
+                  {/* <div className="flex items-center gap-2">
                     <Checkbox id="tag-react" />
                     <Label className="text-sm font-normal" htmlFor="tag-react">
                       React
@@ -153,7 +163,7 @@ export function HomePage() {
                     <Label className="text-sm font-normal" htmlFor="tag-performance">
                       Performance
                     </Label>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -407,10 +417,11 @@ export function HomePage() {
                 <div className="flex flex-wrap gap-2 mt-2 mb-2">
                   {project?.tags?.length > 0 && project?.tags.map(tag => (
                     <Badge
-                    className="hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
+                    className={`hover:bg-gray-100/50 dark:hover:bg-gray-800/50 ${selectedTag?.includes(tag) ? 'bg-blue-500 text-white' : ''}`}
                     variant="secondary">
                     {tag}
                   </Badge>
+                  
                   ))}
                 </div>
                 <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-3">
