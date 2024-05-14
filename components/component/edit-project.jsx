@@ -89,7 +89,7 @@ export function EditProject({ openModal, projectId }) {
                 setTags([...tags, value]);
               }}
             >
-              <SelectTrigger id="role">``
+              <SelectTrigger id="role">
                 <SelectValue placeholder="Type here" />
               </SelectTrigger>
               <SelectContent onChange={() => alert("f")}>

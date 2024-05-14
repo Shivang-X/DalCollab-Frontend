@@ -1,21 +1,15 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-// import thunk from 'redux-thunk';
 import { composeWithDevTools } from '@redux-devtools/extension';
 
-// import { authReducer, userReducer } from './reducers/userReducers';
 import { authReducer, userReducer } from './reducers/userReducers';
-// import { authReducer, userReducer } from './../';
-// import { getAdsReducer, updateAdsReducer } from
+import { projectReducer } from './reducers/projectReducers';
 
 const thunk = require('redux-thunk').thunk;
 
-
 const reducer = combineReducers({
     auth: authReducer,
-    // getads: getAdsReducer,
     user: userReducer,
-    // postad: adReducer,
-    // updateads: updateAdsReducer
+    projects: projectReducer
 })
 
 

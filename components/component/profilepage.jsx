@@ -79,7 +79,7 @@ export function ProfilePage() {
                     </DropdownMenu>
                   </div>
                   <div className="mt-4 flex flex-wrap gap-2">
-                  {project.tags.map(tag => 
+                  {project.tags && project.tags.map(tag => 
                     <Badge>{tag}</Badge>
                   )}
                   </div>

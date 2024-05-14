@@ -5,9 +5,25 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { DropdownMenuTrigger, DropdownMenuItem, DropdownMenuContent, DropdownMenu } from "@/components/ui/dropdown-menu"
+import { useDispatch, useSelector } from "react-redux"
+import { useEffect } from "react"
+import { getAllProjects } from "@/actions/projectActions"
 
 
 export function HomePage() {
+
+  const dispatch = useDispatch();
+
+  const { isAuthenticated, user, error } = useSelector((state) => state.auth);
+  const { loading, projects } = useSelector((state) => state.projects);
+  const { isUpdated } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    dispatch(getAllProjects());
+  }, [dispatch])
+
+  console.log(projects)
+
   return (
     (<div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-800">
       <header
@@ -369,6 +385,62 @@ export function HomePage() {
               </div>
             </div>
           </section>
+          {projects?.length > 0 ? (<>
+          {
+            projects.map((project, i) => (
+              <section className="max-w-6xl mx-auto">
+            <div
+              className="group relative rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 dark:border-gray-800">
+              <Link className="absolute inset-0 z-10" href="#">
+                <span className="sr-only">View post</span>
+              </Link>
+              <div className="p-4">
+                <h3 className="text-lg font-semibold tracking-tight">{project?.name}</h3>
+                <div className="flex flex-wrap gap-2 mt-2 mb-2">
+                  {project?.tags?.length > 0 && project?.tags.map(tag => (
+                    <Badge
+                    className="hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
+                    variant="secondary">
+                    {tag}
+                  </Badge>
+                  ))}
+                </div>
+                <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-3">
+                  Learn how to design and develop a robust e-commerce platform that can handle high traffic and complex
+                  business requirements. From optimizing the backend architecture to implementing secure payment
+                  processing, we'll cover the essential elements of building a scalable and reliable e-commerce
+                  solution. Get ready to take your online business to new heights.
+                </p>
+                <div className="flex items-center justify-between mt-2">
+                  <div className="flex items-center gap-2">
+                    <img
+                      alt="Author avatar"
+                      className="rounded-full"
+                      height="32"
+                      src="/placeholder.svg"
+                      style={{
+                        aspectRatio: "32/32",
+                        objectFit: "cover",
+                      }}
+                      width="32" />
+                    <span className="text-sm text-gray-500 dark:text-gray-400">{project.developerName}</span>
+                  </div>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">May 2, 2024</span>
+                </div>
+                <div className="mt-4">
+                  <Button
+                    className="w-full transition-all duration-300 ease-in-out hover:bg-gray-100 dark:hover:bg-gray-800"
+                    size="sm"
+                    variant="ghost">
+                    Show more
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </section>
+            ))
+          }
+          </>) : (<><h1>No Projects to show</h1></>)}
         </div>
       </main>
     </div>)
