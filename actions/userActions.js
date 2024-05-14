@@ -150,7 +150,6 @@ export const loadUser = () => async (dispatch) => {
     })
 
     const {data} = await request.get(`/profile/me`);
-    console.log(data);
 
     dispatch({
       type: "LOAD_USER_SUCCESS",

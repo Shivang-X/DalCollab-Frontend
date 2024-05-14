@@ -6,13 +6,16 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { DropdownMenuTrigger, DropdownMenuItem, DropdownMenuContent, DropdownMenu } from "@/components/ui/dropdown-menu"
 import { useDispatch, useSelector } from "react-redux"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { getAllProjects } from "@/actions/projectActions"
+import { allskills } from "@/lib/data"
 
 
 export function HomePage() {
 
   const dispatch = useDispatch();
+
+  const [selectedTag, setSelectedTag] = useState([]);
 
   const { isAuthenticated, user, error } = useSelector((state) => state.auth);
   const { loading, projects } = useSelector((state) => state.projects);
@@ -22,7 +25,11 @@ export function HomePage() {
     dispatch(getAllProjects());
   }, [dispatch])
 
-  console.log(projects)
+  const filteredProjects = projects?.length > 0 && projects.filter((project) =>
+    project.tags.some((tag) => selectedTag.includes(tag))
+  );
+
+
 
   return (
     (<div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-800">
@@ -91,7 +98,7 @@ export function HomePage() {
             className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-4 dark:border-gray-800">
             <h3 className="text-lg font-semibold mb-4">Filters</h3>
             <div className="space-y-4">
-              <div>
+              {/* <div>
                 <h4 className="text-sm font-medium mb-2">Category</h4>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
@@ -119,16 +126,16 @@ export function HomePage() {
                     </Label>
                   </div>
                 </div>
-              </div>
+              </div> */}
               <div>
                 <h4 className="text-sm font-medium mb-2">Tags</h4>
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Checkbox id="tag-javascript" />
+                  {allskills.map(tag => <div className="flex items-center gap-2">
+                    <Checkbox id="tag-javascript" onClick={() => setSelectedTag([...selectedTag, tag])}/>
                     <Label className="text-sm font-normal" htmlFor="tag-javascript">
-                      JavaScript
+                      {tag}
                     </Label>
-                  </div>
+                  </div>)}
                   <div className="flex items-center gap-2">
                     <Checkbox id="tag-react" />
                     <Label className="text-sm font-normal" htmlFor="tag-react">
@@ -150,18 +157,19 @@ export function HomePage() {
                 </div>
               </div>
             </div>
-            <div className="mt-4">
+            {/* <div className="mt-4">
               <Button
                 className="w-full bg-gray-900 text-gray-50 hover:bg-gray-900/90 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90"
                 size="sm"
-                variant="ghost">
+                variant="ghost"
+                onClick={() => console.log(selectedTag)}>
                 Search
               </Button>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="grid gap-8">
-          <section className="max-w-6xl mx-auto">
+          {/* <section className="max-w-6xl mx-auto">
             <div
               className="group relative rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 dark:border-gray-800">
               <Link className="absolute inset-0 z-10" href="#">
@@ -384,7 +392,68 @@ export function HomePage() {
                 </div>
               </div>
             </div>
+          </section> */}
+          {filteredProjects?.length > 0 ? (<>
+          {
+            filteredProjects.map((project, i) => (
+              <section className="max-w-6xl mx-auto">
+            <div
+              className="group relative rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 dark:border-gray-800">
+              <Link className="absolute inset-0 z-10" href="#">
+                <span className="sr-only">View post</span>
+              </Link>
+              <div className="p-4">
+                <h3 className="text-lg font-semibold tracking-tight">{project?.name}</h3>
+                <div className="flex flex-wrap gap-2 mt-2 mb-2">
+                  {project?.tags?.length > 0 && project?.tags.map(tag => (
+                    <Badge
+                    className="hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
+                    variant="secondary">
+                    {tag}
+                  </Badge>
+                  ))}
+                </div>
+                <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-3">
+                  Learn how to design and develop a robust e-commerce platform that can handle high traffic and complex
+                  business requirements. From optimizing the backend architecture to implementing secure payment
+                  processing, we'll cover the essential elements of building a scalable and reliable e-commerce
+                  solution. Get ready to take your online business to new heights.
+                </p>
+                <div className="flex items-center justify-between mt-2">
+                  <div className="flex items-center gap-2">
+                    <img
+                      alt="Author avatar"
+                      className="rounded-full"
+                      height="32"
+                      src="/placeholder.svg"
+                      style={{
+                        aspectRatio: "32/32",
+                        objectFit: "cover",
+                      }}
+                      width="32" />
+                    <span className="text-sm text-gray-500 dark:text-gray-400">{project.developerName}</span>
+                  </div>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">May 2, 2024</span>
+                </div>
+                <div className="mt-4">
+                  <Button
+                    className="w-full transition-all duration-300 ease-in-out hover:bg-gray-100 dark:hover:bg-gray-800"
+                    size="sm"
+                    variant="ghost">
+                    Show more
+                  </Button>
+                </div>
+              </div>
+            </div>
           </section>
+            ))
+          }
+          <div class="flex items-center">
+            <hr class="flex-grow h-px bg-gray-200 mr-4" />
+            Other Projects
+            <hr class="flex-grow h-px bg-gray-200 ml-4" />
+          </div>
+          </>) : (<></>)}
           {projects?.length > 0 ? (<>
           {
             projects.map((project, i) => (
