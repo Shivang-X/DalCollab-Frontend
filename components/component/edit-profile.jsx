@@ -94,7 +94,6 @@ export function EditProfile({ openModal }) {
               <Avatar className="h-20 w-20">
                 <AvatarImage alt="@shadcn" className="rounded-full object-cover" src="/placeholder-avatar.jpg" />
                 {profileImagePreview ? (<img src={profileImagePreview}/>):(<AvatarFallback>{userName?.substring(0,2).toUpperCase()}</AvatarFallback>)}
-                
               </Avatar>
               <div className="ml-4 w-52">
                 <Input id="profile-photo" type="file" onChange={onImageChange}/>

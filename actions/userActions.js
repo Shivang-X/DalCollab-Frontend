@@ -131,6 +131,28 @@ export const updateSkills = (skills) =>  async(dispatch) => {
   }
 }
 
+export const addProject = (project) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "ADD_PROJECT_REQUEST",
+    });
+
+    const response = await request.post("/profile/addproject", project);
+
+    dispatch({
+      type: "ADD_PROJECT_SUCCESS",
+      payload: response.data,
+    });
+
+  } catch (error) {
+
+    dispatch({
+      type: "ADD_PROJECT_FAIL",
+      payload: error.response.data.error,
+    });
+  }
+};
+
 export const updateProject = (project) =>  async(dispatch) => {
   try {
     dispatch({

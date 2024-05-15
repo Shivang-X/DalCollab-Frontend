@@ -12,7 +12,6 @@ export const getAllProjects = () => async (dispatch) => {
       type: "ALL_PROJECTS_SUCCESS",
       payload: response.data,
     });
-
   } catch (error) {
     dispatch({
       type: "ALL_PROJECTS_FAIL",
@@ -20,6 +19,7 @@ export const getAllProjects = () => async (dispatch) => {
     });
   }
 };
+
 
 // Clear Errors
 export const clearErrors = () => async (dispatch) => {

@@ -16,12 +16,14 @@ import { EditIntrests } from "./edit-intrests";
 import { EditProject } from "./edit-project";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { AddProject } from "./add-project";
 
 export function ProfilePage() {
   const [editModal, setEditModal] = useState(false);
   const [editSkills, setEditSkills] = useState(false);
   const [editIntrests, setEditIntrests] = useState(false);
   const [editProject, setEditProject] = useState(false);
+  const [addProject, setAddProject] = useState(false);
   const [projectId, setProjectId] = useState(0);
 
   const { isAuthenticated, user, error } = useSelector((state) => state.auth);
@@ -31,12 +33,19 @@ export function ProfilePage() {
       {editModal ? <EditProfile openModal={setEditModal} /> : <></>}
       {editSkills ? <EditSkills openModal={setEditSkills} /> : <></>}
       {editIntrests ? <EditIntrests openModal={setEditIntrests} /> : <></>}
-      {editProject ? <EditProject openModal={setEditProject} projectId={projectId} /> : <></>}
+      {addProject ? <AddProject openModal={setAddProject} /> : <></>}
+      {editProject ? (
+        <EditProject openModal={setEditProject} projectId={projectId} />
+      ) : (
+        <></>
+      )}
       <div>
         <div className="flex items-center gap-4">
           <Avatar className="h-16 w-16">
             <AvatarImage alt="@shadcn" src="/placeholder-avatar.jpg" />
-            <AvatarFallback>{user?.userName?.substring(0,2).toUpperCase()}</AvatarFallback>
+            <AvatarFallback>
+              {user?.userName?.substring(0, 2).toUpperCase()}
+            </AvatarFallback>
           </Avatar>
           <div className="w-full">
             <div className="w-full flex items-center justify-between">
@@ -54,38 +63,62 @@ export function ProfilePage() {
             <>
               {user?.projects.map((project, i) => (
                 <div className="rounded-lg overflow-hidden">
+                  <div className="p-4 bg-gray-100 dark:bg-gray-800">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-lg font-medium">{project.name}</h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          {project.description}
+                        </p>
+                      </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            className="ml-auto"
+                            size="icon"
+                            variant="ghost"
+                          >
+                            <MoveHorizontalIcon className="w-4 h-4" />
+                            <span className="sr-only">Toggle menu</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem>View Project</DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setEditProject(true);
+                              setProjectId(i);
+                            }}
+                          >
+                            Edit Project
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>Delete Project</DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {project.tags &&
+                        project.tags.map((tag) => <Badge>{tag}</Badge>)}
+                    </div>
+                  </div>
+                </div>
+              ))}
+              <div className="rounded-lg overflow-hidden">
                 <div className="p-4 bg-gray-100 dark:bg-gray-800">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-lg font-medium">{project.name}</h3>
+                      <h3 className="text-lg font-medium">Add New Project</h3>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {project.description}
+                        Click to add a new project.
                       </p>
                     </div>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button className="ml-auto" size="icon" variant="ghost">
-                          <MoveHorizontalIcon className="w-4 h-4" />
-                          <span className="sr-only">Toggle menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem>View Project</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => {setEditProject(true); setProjectId(i)}}>
-                          Edit Project
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>Delete Project</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                  {project.tags && project.tags.map(tag => 
-                    <Badge>{tag}</Badge>
-                  )}
+                    <Button className="ml-auto" size="icon" variant="ghost">
+                      <PlusIcon className="w-4 h-4" onClick={() => setAddProject(true)}/>
+                      <span className="sr-only">Add Project</span>
+                    </Button>
                   </div>
                 </div>
               </div>
-              ))}
             </>
           ) : (
             <></>
@@ -283,11 +316,11 @@ export function ProfilePage() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-2">
-            {
-              user?.skills?.map((skill) =><>
-              <Badge>{skill}</Badge>
-              </>)
-            }
+              {user?.skills?.map((skill) => (
+                <>
+                  <Badge>{skill}</Badge>
+                </>
+              ))}
               {/* <Badge>JavaScript</Badge>
               <Badge>React</Badge>
               <Badge>Node.js</Badge>
@@ -306,11 +339,11 @@ export function ProfilePage() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-2">
-            {
-              user?.interests?.map((interest) =><>
-              <Badge>{interest}</Badge>
-              </>)
-            }
+              {user?.interests?.map((interest) => (
+                <>
+                  <Badge>{interest}</Badge>
+                </>
+              ))}
               {/* <Badge>Web Development</Badge>
               <Badge>Mobile Development</Badge>
               <Badge>Open Source</Badge>
@@ -429,6 +462,26 @@ function TwitterIcon(props) {
       strokeLinejoin="round"
     >
       <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
+    </svg>
+  );
+}
+
+function PlusIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M5 12h14" />
+      <path d="M12 5v14" />
     </svg>
   );
 }
