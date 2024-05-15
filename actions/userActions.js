@@ -1,4 +1,6 @@
 import request from "@/lib/axios-config";
+import axios from "axios";
+import { use } from "react";
   
 //Login
 export const login = (user) => async (dispatch) => {
@@ -57,7 +59,17 @@ export const updateProfile = (user) => async(dispatch) => {
       type: "UPDATE_PROFILE_REQUEST",
     });
 
-    const { data } = await request.put(`/profile/update`, user);
+    const header = { headers: { 
+      'Content-Type': 'multipart/form-data',  
+    }}
+    // const formData = new FormData(user)
+    // formData.append('try', 'try')
+    // const { data } = await request.post(`/profile/update`, user, header);
+    const { data } = await request.post(`http://localhost:8080/api/v1/profile/update`, user, {
+      headers: {
+        'Content-Type': 'multipart/form-data', 
+      },
+    });
     
     dispatch({
       type: "UPDATE_PROFILE_SUCCESS",

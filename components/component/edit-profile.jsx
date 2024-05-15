@@ -20,6 +20,8 @@ export function EditProfile({ openModal }) {
   const [mobileNumber, setMobileNumber] = useState(0);
   const [tagline, setTagline] = useState(0);
   const [bio, setBio] = useState(0);
+  const [profileImage, setProfileImage] = useState();
+  const [profileImagePreview, setProfileImagePreview] = useState();
 
   const { isAuthenticated, user, error } = useSelector(state => state.auth)
   const { isUpdated } = useSelector((state) => state.user);
@@ -42,14 +44,30 @@ export function EditProfile({ openModal }) {
     }
   }, [dispatch, user, isUpdated])
 
+  const onImageChange = (e) => {
+    const reader = new FileReader();
+    setProfileImage(e.target.files[0]);
+
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setProfileImagePreview(reader.result);
+      }
+    };
+
+    reader.readAsDataURL(e.target.files[0]);
+  };
+
   const submitHandler = async (e) => {
-    console.log({userName, mobileNumber, tagline, bio})
     e.preventDefault();
-    // removeErrorLayout();
-    // if(isValidationPassed()){
-      const user = {userName, mobileNumber, tagline, bio};
-      console.log(user);
-      dispatch(updateProfile(user))
+
+    const user = new FormData();
+    user.append('userName', userName);
+    user.append('mobileNumber', mobileNumber);
+    user.append('tagline', tagline);
+    user.append('bio', bio);
+    user.append('profileImage', new Blob([profileImage]));   
+    console.log({user});
+    dispatch(updateProfile(user))
     // }
   }
   
@@ -67,6 +85,22 @@ export function EditProfile({ openModal }) {
         </div>
         <form className="space-y-4">
           {/* <div className="grid grid-cols-2 gap-4"> */}
+          {/* <div>
+              <Label htmlFor="profile-photo">Profile Photo</Label>
+              <Input id="profile-photo" type="file" />
+          </div> */}
+          <div className="grid grid-cols-4 items-center gap-4">
+            <div className="col-span-4 flex items-center justify-center">
+              <Avatar className="h-20 w-20">
+                <AvatarImage alt="@shadcn" className="rounded-full object-cover" src="/placeholder-avatar.jpg" />
+                {profileImagePreview ? (<img src={profileImagePreview}/>):(<AvatarFallback>{userName?.substring(0,2).toUpperCase()}</AvatarFallback>)}
+                
+              </Avatar>
+              <div className="ml-4 w-52">
+                <Input id="profile-photo" type="file" onChange={onImageChange}/>
+              </div>
+            </div>
+          </div>
             <div>
               <Label htmlFor="name">Name</Label>
               <Input defaultValue="John Doe" id="username" value={userName} onChange={(e) => setUsername(e.target.value)}/>
@@ -88,7 +122,7 @@ export function EditProfile({ openModal }) {
             <Label htmlFor="bio">Bio</Label>
             <Textarea
               id="bio"
-              rows={3} 
+              rows={5} 
               value={bio}
               onChange={(e) => setBio(e.target.value)}/>
           </div>

@@ -36,7 +36,7 @@ export function ProfilePage() {
         <div className="flex items-center gap-4">
           <Avatar className="h-16 w-16">
             <AvatarImage alt="@shadcn" src="/placeholder-avatar.jpg" />
-            <AvatarFallback>JD</AvatarFallback>
+            <AvatarFallback>{user?.userName?.substring(0,2).toUpperCase()}</AvatarFallback>
           </Avatar>
           <div className="w-full">
             <div className="w-full flex items-center justify-between">
